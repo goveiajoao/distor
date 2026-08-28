@@ -6,6 +6,13 @@ param (
 
 $prefix = ">>>"
 $serviceName = "tor"
+$fsar = New-Object 
+System.Security.AccessControl.FileSystemAccessRule(`
+		"NT AUTHORITY\LOCAL SERVICE",`
+		"ReadAndExecute",`
+		"ContainerInherit,ObjectInherit",`
+		"InheritOnly",`
+		"Allow")
 $serviceInfo = Get-Service -Name $serviceName -ErrorAction SilentlyContinue
 $downloadHub = Invoke-WebRequest -Uri https://www.torproject.org/download/tor/
 $arch = (&{if($i32)
@@ -13,6 +20,7 @@ $arch = (&{if($i32)
 		} else
 		{"x86_64"
 		}})
+
 
 
 if ($serviceInfo)
@@ -23,8 +31,6 @@ if ($serviceInfo)
 	{
 		Write-Host "$prefix '$serviceName' service not running, starting it..."
 		Start-Service -Name $serviceName -verbose
-		$serviceInfo.Refresh()
-		Write-Host $serviceInfo.Status
 	} else
 	{
 		Write-Host "$prefix '$serviceName' service is running"
@@ -63,13 +69,16 @@ if ($serviceInfo)
 		Remove-Item -Path $torTar
 		Write-Host "$prefix deleted tor.tar.gz"
 	
-		# Install tor
-		Start-Process -Verb runAs -FilePath $tor -ArgumentList "-service", "install"
-		Write-Host "$prefix tor installed"
+		# Set torFolderAcl before install
+		$torFolder = Join-Path $dataFolder "tor"
+		New-Item -Type Directory -Path $torFolder -Force | Out-Null
+		$torFolderAcl = Get-Acl $torFolder
+		$torFolderAcl.AddAccessRule($fsar)
+		$torFolderAcl | Set-Acl .\MyTorFolder
 
-		# Start top
-		Start-Process -Verb runAs -FilePath "powershell" -ArgumentList "Start-Service -Name $serviceName -verbose"
-		Start-Service -Name $serviceName -verbose
+		# Install tor
+		Start-Process -Wait -Verb runAs -FilePath $tor -ArgumentList "-service", "install"
+		Write-Host "$prefix tor installed"
 
 	} else
 	{
@@ -86,7 +95,7 @@ if ($serviceInfo)
 $shortcutDialog = New-Object System.Windows.Forms.OpenFileDialog
 $shortcutDialog.initialDirectory = [Environment]::GetFolderPath("Desktop")
 $shortcutDialog.filter = "Client Shortcut (*.lnk)| *.lnk"
-if ($shortcutDialog.ShowDialog() | Out-Null)
+if ($shortcutDialog.ShowDialog())
 {
 	Write-Host "true"
 } else
