@@ -2,4 +2,10 @@
     <img src="assets/distor.png">
 </p>
 
-    ---
+---
+
+# About
+Simple powershell windows script for setting any electron based discord client shortcut to use [tor](https://www.torproject.org/) proxy.
+
+# Install
+
