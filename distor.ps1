@@ -68,7 +68,6 @@ if ($serviceInfo)
 	Write-Host "$prefix deleted tor.tar.gz"
 	
 	# Install tor
-	# iex "$tor -service install"
 	Start-Process -Verb runAs -FilePath $tor -ArgumentList "-service", "install"
 	Write-Host "$prefix tor installed"
 
@@ -77,7 +76,7 @@ if ($serviceInfo)
 
 
 
-# Change Selecter *.lnk
+# Change Selected *.lnk
 # Take file
 [System.Reflection.Assembly]::LoadWithPartialName("System.windows.forms") | Out-Null
 $shortcutDialog = New-Object System.Windows.Forms.OpenFileDialog
