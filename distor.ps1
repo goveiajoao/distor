@@ -84,7 +84,7 @@ Add-Type -AssemblyName System.Windows.Forms
 $shortcutDialog = New-Object System.Windows.Forms.OpenFileDialog
 $shortcutDialog.initialDirectory = [Environment]::GetFolderPath("Desktop")
 $shortcutDialog.filter = "Client Shortcut (*.lnk)| *.lnk"
-if ($OpenFileDialog.ShowDialog() -eq "OK")
+if ($shortcutDialog.ShowDialog() -eq "OK")
 {
 	# Take and change shortcut
 	$shortcutPath = $shortcutDialog.filename
