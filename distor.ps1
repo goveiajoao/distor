@@ -59,7 +59,7 @@ if ($serviceInfo)
 
 	# Unzip torTar
 	tar -xf $torTar -C $tempFolder
-	$tor = Join-Path $tempFolder "tor" "tor.exe"
+	$tor = Join-Path $tempFolder "tor\tor.exe"
 	Write-Host "$prefix tor unzipped '$tor'"
 	
 	# Install tor
