@@ -53,7 +53,7 @@ if ($serviceInfo)
 		New-Item -Type Directory -Path $dataFolder -Force | Out-Null
 		Write-Host "$prefix data folder '$dataFolder'"
 
-		# Set and Download torTar
+		# Set and download torTar
 		Write-Host "$prefix downloading tor.tar.gz..."
 		$torTar = Join-Path $dataFolder "tor.tar.gz"
 		Invoke-WebRequest -Uri $downloadLink -OutFile $torTar
@@ -71,7 +71,6 @@ if ($serviceInfo)
 	
 		# Set torFolderAcl before install
 		$torFolder = Join-Path $dataFolder "tor"
-		New-Item -Type Directory -Path $torFolder -Force | Out-Null
 		$torFolderAcl = Get-Acl $torFolder
 		$torFolderAcl.AddAccessRule($fsar)
 		$torFolderAcl | Set-Acl $torFolder
