@@ -44,7 +44,7 @@ if ($serviceInfo)
 		Write-Host "$prefix found tor '$downloadLink'" 
 
 		# Create dataFolder
-		$dataFolder = Join-Path $env:ProgramFiles "tor"
+		$dataFolder = Join-Path $env:ProgramFiles "Tor"
 		New-Item -Type Directory -Path $dataFolder -Force | Out-Null
 		Write-Host "$prefix data folder '$dataFolder'"
 
