@@ -53,11 +53,13 @@ if ($serviceInfo)
 
 
 	# Set and Download torTar
+	Write-Host "$prefix downloading tor..."
 	$torTar = Join-Path $tempFolder "tor.tar.gz"
 	Invoke-WebRequest -Uri $downloadLink -OutFile $torTar
 	Write-Host "$prefix tor downloaded '$torTar'"
 
 	# Unzip torTar
+	Write-Host "$prefix unzipping tor..."
 	tar -xf $torTar -C $tempFolder
 	$tor = Join-Path $tempFolder "tor\tor.exe"
 	Write-Host "$prefix tor unzipped '$tor'"
