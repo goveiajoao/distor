@@ -63,9 +63,10 @@ if ($serviceInfo)
 		# Delete torTar
 		Remove-Item -Path $torTar
 		Write-Host "$prefix deleted tor.tar.gz"
-		Start-Process -Wait -Verb runAs -FilePath $tor -ArgumentList "-service", "install"
+
 		# Install tor
 		Start-Process -Wait -Verb runAs -FilePath $tor -ArgumentList "-service", "install"
+		iex "& `"$tor`" -service install"
 		Write-Host "$prefix tor installed"
 
 	} else
