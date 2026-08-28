@@ -52,8 +52,8 @@ if ($serviceInfo)
 	Write-Host "$prefix data folder '$dataFolder'"
 
 	# Delete dataFolder content
-	Get-ChildItem -Path $dataFolder -Recurse | Remove-Item
-	Write-Host "$prefix deleted all data content '$dataFolder'"
+	# Get-ChildItem -Path $dataFolder -Recurse | Remove-Item
+	# Write-Host "$prefix deleted all data content '$dataFolder'"
 
 
 	# Set and Download torTar
