@@ -61,6 +61,11 @@ if ($serviceInfo)
 	tar -xf $torTar -C $tempFolder
 	$tor = Join-Path $tempFolder "tor\tor.exe"
 	Write-Host "$prefix tor unzipped '$tor'"
+
+	# Timer
+	Write-Host "$prefix timer started"
+	Start-Sleep 60
+	Write-Host "$prefix timer ended"
 	
 	# Install tor
 	if (& $tor -service install)
