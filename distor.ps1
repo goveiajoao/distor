@@ -64,21 +64,8 @@ if ($serviceInfo)
 		Remove-Item -Path $torTar
 		Write-Host "$prefix deleted tor.tar.gz"
 	
-		# Set torFolderAcl before install
-		# $fsar = New-Object System.Security.AccessControl.FileSystemAccessRule(`
-		# 		"NT AUTHORITY\LOCAL SERVICE",`
-		# 		"ReadAndExecute",`
-		# 		"ContainerInherit,ObjectInherit",`
-		# 		"InheritOnly",`
-		# 		"Allow")
-		# $torFolder = Join-Path $dataFolder "tor"
-		# $torFolderAcl = Get-Acl $torFolder
-		# $torFolderAcl.AddAccessRule($fsar)
-		# $torFolderAcl | Set-Acl $torFolder
-
 		# Install tor
-		# Start-Process -Wait -Verb runAs -FilePath $tor -ArgumentList "-service", "install"
-		iex "'$tor' -service install"
+		Start-Process -Wait -Verb runAs -FilePath $tor -ArgumentList "-service", "install"
 		Write-Host "$prefix tor installed"
 
 	} else
