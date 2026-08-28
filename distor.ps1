@@ -74,7 +74,7 @@ if ($serviceInfo)
 		New-Item -Type Directory -Path $torFolder -Force | Out-Null
 		$torFolderAcl = Get-Acl $torFolder
 		$torFolderAcl.AddAccessRule($fsar)
-		$torFolderAcl | Set-Acl .\MyTorFolder
+		$torFolderAcl | Set-Acl $torFolder
 
 		# Install tor
 		Start-Process -Wait -Verb runAs -FilePath $tor -ArgumentList "-service", "install"
@@ -108,5 +108,5 @@ $shortcutPath = $shortcutDialog.filename
 $wsh = New-Object -ComObject WScript.Shell
 $shortcut = $wsh.CreateShortcut($shortcutPath)
 $shortcut.arguments = "--proxy-server=`"socks5://$addr`:$port`""
-Write-Host "$prefix arguments: ${shortcut.arguments}"
+Write-Host "$prefix applying proxy on shortcut '$shortcutPath'"
 $shortcut.Save()
