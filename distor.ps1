@@ -6,8 +6,7 @@ param (
 
 $prefix = ">>>"
 $serviceName = "tor"
-$fsar = New-Object 
-System.Security.AccessControl.FileSystemAccessRule(`
+$fsar = New-Object System.Security.AccessControl.FileSystemAccessRule(`
 		"NT AUTHORITY\LOCAL SERVICE",`
 		"ReadAndExecute",`
 		"ContainerInherit,ObjectInherit",`
