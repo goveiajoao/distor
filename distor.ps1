@@ -50,7 +50,7 @@ if ($serviceInfo)
 		if ($downloadLink -match "https://[^`"]+")
 		{
 			$downloadLink = $Matches[0]
-			Write-Host "$prefix found tor '$downloadLink'" 
+			Write-Host "$prefix found tor link '$downloadLink'" 
 
 			# Create dataFolder
 			$dataFolder = Join-Path $env:ProgramFiles "Tor"
@@ -79,7 +79,7 @@ if ($serviceInfo)
 
 		} else
 		{
-			Write-Host "$prefix didnt find useful tor"
+			Write-Host "$prefix didn't find useful tor link"
 			$LASTEXITCODE = 1; Exit
 		}
 
