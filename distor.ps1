@@ -1,3 +1,5 @@
+#Requires -RunAsAdministrator
+
 param (
 	[switch]$i32 = $false,
 	[string]$addr = "127.0.0.1",
@@ -61,7 +63,7 @@ if ($serviceInfo)
 		# Delete torTar
 		Remove-Item -Path $torTar
 		Write-Host "$prefix deleted tor.tar.gz"
-	
+		Start-Process -Wait -Verb runAs -FilePath $tor -ArgumentList "-service", "install"
 		# Install tor
 		Start-Process -Wait -Verb runAs -FilePath $tor -ArgumentList "-service", "install"
 		Write-Host "$prefix tor installed"
@@ -77,14 +79,14 @@ if ($serviceInfo)
 
 # Change Selected *.lnk
 # Take file
-[System.Reflection.Assembly]::LoadWithPartialName("System.windows.forms") | Out-Null
+Add-Type -AssemblyName System.Windows.Forms
 $shortcutDialog = New-Object System.Windows.Forms.OpenFileDialog
 $shortcutDialog.initialDirectory = [Environment]::GetFolderPath("Desktop")
 $shortcutDialog.filter = "Client Shortcut (*.lnk)| *.lnk"
-$shortcutPath = $shortcutDialog.filename
-if ($shortcutPath)
+if ($OpenFileDialog.ShowDialog() -eq "OK")
 {
 	# Take and change shortcut
+	$shortcutPath = $shortcutDialog.filename
 	$wsh = New-Object -ComObject WScript.Shell
 	$shortcut = $wsh.CreateShortcut($shortcutPath)
 	$shortcut.arguments = "--proxy-server=`"socks5://$addr`:$port`""
