@@ -1,17 +1,13 @@
+#Requires -RunAsAdministrator
+
 param (
 	[switch]$i32 = $false,
 	[string]$addr = "127.0.0.1",
-	[string]$port = "9050"
+	[string]$port = "9050",
+	[string]$serviceName = "tor"
 )
 
 $prefix = ">>>"
-$serviceName = "tor"
-$fsar = New-Object System.Security.AccessControl.FileSystemAccessRule(`
-		"NT AUTHORITY\LOCAL SERVICE",`
-		"ReadAndExecute",`
-		"ContainerInherit,ObjectInherit",`
-		"InheritOnly",`
-		"Allow")
 $serviceInfo = Get-Service -Name $serviceName -ErrorAction SilentlyContinue
 $downloadHub = Invoke-WebRequest -Uri https://www.torproject.org/download/tor/
 $arch = (&{if($i32)
@@ -48,7 +44,7 @@ if ($serviceInfo)
 		Write-Host "$prefix found tor '$downloadLink'" 
 
 		# Create dataFolder
-		$dataFolder = Join-Path $env:APPDATA "distor"
+		$dataFolder = Join-Path $env:ProgramFiles "tor"
 		New-Item -Type Directory -Path $dataFolder -Force | Out-Null
 		Write-Host "$prefix data folder '$dataFolder'"
 
@@ -69,13 +65,20 @@ if ($serviceInfo)
 		Write-Host "$prefix deleted tor.tar.gz"
 	
 		# Set torFolderAcl before install
-		$torFolder = Join-Path $dataFolder "tor"
-		$torFolderAcl = Get-Acl $torFolder
-		$torFolderAcl.AddAccessRule($fsar)
-		$torFolderAcl | Set-Acl $torFolder
+		# $fsar = New-Object System.Security.AccessControl.FileSystemAccessRule(`
+		# 		"NT AUTHORITY\LOCAL SERVICE",`
+		# 		"ReadAndExecute",`
+		# 		"ContainerInherit,ObjectInherit",`
+		# 		"InheritOnly",`
+		# 		"Allow")
+		# $torFolder = Join-Path $dataFolder "tor"
+		# $torFolderAcl = Get-Acl $torFolder
+		# $torFolderAcl.AddAccessRule($fsar)
+		# $torFolderAcl | Set-Acl $torFolder
 
 		# Install tor
-		Start-Process -Wait -Verb runAs -FilePath $tor -ArgumentList "-service", "install"
+		# Start-Process -Wait -Verb runAs -FilePath $tor -ArgumentList "-service", "install"
+		iex "$tor -service install"
 		Write-Host "$prefix tor installed"
 
 	} else
@@ -93,26 +96,13 @@ if ($serviceInfo)
 $shortcutDialog = New-Object System.Windows.Forms.OpenFileDialog
 $shortcutDialog.initialDirectory = [Environment]::GetFolderPath("Desktop")
 $shortcutDialog.filter = "Client Shortcut (*.lnk)| *.lnk"
-
-if ($shortcutDialog.ShowDialog())
-{
-	Write-Host "true"
-} else
-{
-	Write-Host "false"
-}
 $shortcutPath = $shortcutDialog.filename
 if ($shortcutPath)
 {
-	Write-Host "true"
-} else
-{
-	Write-Host "false"
+	# Take and change shortcut
+	$wsh = New-Object -ComObject WScript.Shell
+	$shortcut = $wsh.CreateShortcut($shortcutPath)
+	$shortcut.arguments = "--proxy-server=`"socks5://$addr`:$port`""
+	Write-Host "$prefix applying proxy on shortcut '$shortcutPath'"
+	$shortcut.Save()
 }
-
-# Take and change shortcut
-$wsh = New-Object -ComObject WScript.Shell
-$shortcut = $wsh.CreateShortcut($shortcutPath)
-$shortcut.arguments = "--proxy-server=`"socks5://$addr`:$port`""
-Write-Host "$prefix applying proxy on shortcut '$shortcutPath'"
-$shortcut.Save()
