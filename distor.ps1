@@ -52,7 +52,7 @@ if ($serviceInfo)
 	Write-Host "$prefix data folder '$dataFolder'"
 
 	# Delete dataFolder content
-	Get-ChildItem -Path -Path $dataFolder -Recurse | Remove-Item
+	Get-ChildItem -Path $dataFolder -Recurse | Remove-Item
 	Write-Host "$prefix deleted all data content '$dataFolder'"
 
 
