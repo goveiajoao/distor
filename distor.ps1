@@ -36,42 +36,42 @@ if ($serviceInfo)
 	
 	# Take downloadLink
 	$downloadLink = $downloadHub.Links | where {$_ -like "*tor-expert-bundle-windows-$arch*"} | select -first 1
+
 	if ($downloadLink -match "https://[^`"]+")
 	{
 		$downloadLink = $Matches[0]
 		Write-Host "$prefix found tor '$downloadLink'" 
+
+		# Create dataFolder
+		$dataFolder = Join-Path $env:APPDATA "distor"
+		New-Item -Type Directory -Path $dataFolder -Force | Out-Null
+		Write-Host "$prefix data folder '$dataFolder'"
+
+		# Set and Download torTar
+		Write-Host "$prefix downloading tor.tar.gz..."
+		$torTar = Join-Path $dataFolder "tor.tar.gz"
+		Invoke-WebRequest -Uri $downloadLink -OutFile $torTar
+		Write-Host "$prefix tor.tar.gz downloaded '$torTar'"
+
+		# Unzip torTar
+		Write-Host "$prefix unzipping tor..."
+		tar -xf $torTar -C $dataFolder
+		$tor = Join-Path $dataFolder "tor"; $tor = Join-Path $tor "tor.exe"
+		Write-Host "$prefix tor unzipped '$tor'"
+
+		# Delete torTar
+		Remove-Item -Path $torTar
+		Write-Host "$prefix deleted tor.tar.gz"
+	
+		# Install tor
+		Start-Process -Verb runAs -FilePath $tor -ArgumentList "-service", "install"
+		Write-Host "$prefix tor installed"
+
 	} else
 	{
 		Write-Host "$prefix didnt find useful tor"
+		$LASTEXITCODE = 1; Exit
 	}
-
-	
-	# Create dataFolder
-	$dataFolder = Join-Path $env:APPDATA "distor"
-	New-Item -Type Directory -Path $dataFolder -Force | Out-Null
-	Write-Host "$prefix data folder '$dataFolder'"
-
-	# Set and Download torTar
-	Write-Host "$prefix downloading tor.tar.gz..."
-	$torTar = Join-Path $dataFolder "tor.tar.gz"
-	Invoke-WebRequest -Uri $downloadLink -OutFile $torTar
-	Write-Host "$prefix tor.tar.gz downloaded '$torTar'"
-
-	# Unzip torTar
-	Write-Host "$prefix unzipping tor..."
-	tar -xf $torTar -C $dataFolder
-	$tor = Join-Path $dataFolder "tor"; $tor = Join-Path $tor "tor.exe"
-	Write-Host "$prefix tor unzipped '$tor'"
-
-	# Delete torTar
-	Remove-Item -Path $torTar
-	Write-Host "$prefix deleted tor.tar.gz"
-	
-	# Install tor
-	Start-Process -Verb runAs -FilePath $tor -ArgumentList "-service", "install"
-	Write-Host "$prefix tor installed"
-
-
 }
 
 
