@@ -78,7 +78,7 @@ if ($serviceInfo)
 
 		# Install tor
 		# Start-Process -Wait -Verb runAs -FilePath $tor -ArgumentList "-service", "install"
-		iex "$tor -service install"
+		iex "'$tor' -service install"
 		Write-Host "$prefix tor installed"
 
 	} else
