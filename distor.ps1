@@ -48,13 +48,8 @@ if ($serviceInfo)
 	
 	# Create dataFolder
 	$dataFolder = Join-Path $env:APPDATA "distor"
-	# New-Item -Type Directory -Path $dataFolder | Out-Null
+	New-Item -Type Directory -Path $dataFolder -Force | Out-Null
 	Write-Host "$prefix data folder '$dataFolder'"
-
-	# Delete dataFolder content
-	# Get-ChildItem -Path $dataFolder -Recurse | Remove-Item
-	# Write-Host "$prefix deleted all data content '$dataFolder'"
-
 
 	# Set and Download torTar
 	Write-Host "$prefix downloading tor.tar.gz..."
