@@ -47,7 +47,7 @@ if ($serviceInfo)
 
 	
 	# Create dataFolder
-	$dataFolder = $env:APPDATA
+	$dataFolder = Join-Path $env:APPDATA "distor"
 	New-Item -Type Directory -Path $dataFolder | Out-Null
 	Write-Host "$prefix data folder '$dataFolder'"
 
