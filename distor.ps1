@@ -82,7 +82,13 @@ if ($serviceInfo)
 $shortcutDialog = New-Object System.Windows.Forms.OpenFileDialog
 $shortcutDialog.initialDirectory = [Environment]::GetFolderPath("Desktop")
 $shortcutDialog.filter = "Client Shortcut (*.lnk)| *.lnk"
-$shortcutDialog.ShowDialog() | Out-Null
+if ($shortcutDialog.ShowDialog() | Out-Null)
+{
+	Write-Host "true"
+} else
+{
+	Write-Host "false"
+}
 $shortcutPath = $shortcutDialog.filename
 
 # Take and change shortcut
