@@ -4,7 +4,8 @@ param (
 	[switch]$i32 = $false,
 	[string]$addr = "127.0.0.1",
 	[string]$port = "9050",
-	[string]$serviceName = "tor"
+	[string]$serviceName = "tor",
+	[switch]$serviceInstall = $true
 )
 
 $prefix = ">>>"
@@ -33,47 +34,60 @@ if ($serviceInfo)
 
 } else
 { 
-	Write-Host "$prefix '$serviceName' service not found, downloading it..."
-	
-	# Take downloadLink
-	$downloadLink = $downloadHub.Links | where {$_ -like "*tor-expert-bundle-windows-$arch*"} | select -first 1
+	Write-Host "$prefix '$serviceName' service not found"
 
-	if ($downloadLink -match "https://[^`"]+")
+	if ($serviceInstall)
 	{
-		$downloadLink = $Matches[0]
-		Write-Host "$prefix found tor '$downloadLink'" 
 
-		# Create dataFolder
-		$dataFolder = Join-Path $env:ProgramFiles "Tor"
-		New-Item -Type Directory -Path $dataFolder -Force | Out-Null
-		Write-Host "$prefix data folder '$dataFolder'"
+		Write-Host "$prefix installing service..."
 
-		# Set and download torTar
-		Write-Host "$prefix downloading tor.tar.gz..."
-		$torTar = Join-Path $dataFolder "tor.tar.gz"
-		Invoke-WebRequest -Uri $downloadLink -OutFile $torTar
-		Write-Host "$prefix tor.tar.gz downloaded '$torTar'"
 
-		# Unzip torTar
-		Write-Host "$prefix unzipping tor..."
-		tar -xf $torTar -C $dataFolder
-		$tor = Join-Path $dataFolder "tor"; $tor = Join-Path $tor "tor.exe"
-		Write-Host "$prefix tor unzipped '$tor'"
+		# Take downloadLink
+		$downloadLink = $downloadHub.Links | where {$_ -like "*tor-expert-bundle-windows-$arch*"} | select -first 1
 
-		# Delete torTar
-		Remove-Item -Path $torTar
-		Write-Host "$prefix deleted tor.tar.gz"
+		if ($downloadLink -match "https://[^`"]+")
+		{
+			$downloadLink = $Matches[0]
+			Write-Host "$prefix found tor '$downloadLink'" 
 
-		# Install tor
-		# Start-Process -Wait -Verb runAs -FilePath $tor -ArgumentList "-service", "install"
-		iex "& `"$tor`" -service install"
-		Write-Host "$prefix tor installed"
+			# Create dataFolder
+			$dataFolder = Join-Path $env:ProgramFiles "Tor"
+			New-Item -Type Directory -Path $dataFolder -Force | Out-Null
+			Write-Host "$prefix data folder '$dataFolder'"
+
+			# Set and download torTar
+			Write-Host "$prefix downloading tor.tar.gz..."
+			$torTar = Join-Path $dataFolder "tor.tar.gz"
+			Invoke-WebRequest -Uri $downloadLink -OutFile $torTar
+			Write-Host "$prefix tor.tar.gz downloaded '$torTar'"
+
+			# Unzip torTar
+			Write-Host "$prefix unzipping tor..."
+			tar -xf $torTar -C $dataFolder
+			$tor = Join-Path $dataFolder "tor"; $tor = Join-Path $tor "tor.exe"
+			Write-Host "$prefix tor unzipped '$tor'"
+
+			# Delete torTar
+			Remove-Item -Path $torTar
+			Write-Host "$prefix deleted tor.tar.gz"
+
+			# Install tor
+			iex "& `"$tor`" -service install"
+			Write-Host "$prefix tor installed"
+
+		} else
+		{
+			Write-Host "$prefix didnt find useful tor"
+			$LASTEXITCODE = 1; Exit
+		}
 
 	} else
 	{
-		Write-Host "$prefix didnt find useful tor"
-		$LASTEXITCODE = 1; Exit
+
+		Write-Host "$prefix keeping on..."
+
 	}
+	
 }
 
 
