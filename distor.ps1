@@ -2,10 +2,10 @@
 
 param (
 	[switch]$help = $false,
-	[switch]$i32 = $false,
 	[string]$addr = "127.0.0.1",
 	[string]$port = "9050",
 	[switch]$serviceInstall = $true,
+	[switch]$service32 = $false,
 	[string]$serviceName = "tor"
 )
 
@@ -13,7 +13,7 @@ $prefix = ">>>"
 $desktop = [Environment]::GetFolderPath("Desktop")
 $serviceInfo = Get-Service -Name $serviceName -ErrorAction SilentlyContinue
 $downloadHub = Invoke-WebRequest -Uri https://www.torproject.org/download/tor/
-$arch = (&{if($i32)
+$arch = (&{if($service32)
 		{"i686"
 		} else
 		{"x86_64"
@@ -94,21 +94,20 @@ if ($serviceInfo)
 
 
 
-# Change Selected *.lnk
-# Take file
+# Take *.exe file
 Add-Type -AssemblyName System.Windows.Forms
 $shortcutDialog = New-Object System.Windows.Forms.OpenFileDialog
 $shortcutDialog.initialDirectory = "C:\"
 $shortcutDialog.filter = "Client Executable (*.exe)| *.exe"
 if ($shortcutDialog.ShowDialog() -eq "OK")
 {
-	# Take and change shortcut
-	#
+	# Pre-Create
 	$shortcutFile = "$((Get-Culture).TextInfo.ToTitleCase([System.IO.Path]::GetFileNameWithoutExtension($shortcutDialog.filename))).lnk"
 	$shortcutPath = Join-Path $desktop $shortcutFile
 	$shortcutTarget = $shortcutDialog.filename
 	$shortcutArgs = "--proxy-server=`"socks5://$addr`:$port`""
 
+	# Create shortcut
 	$wsh = New-Object -ComObject WScript.Shell
 	$shortcut = $wsh.CreateShortcut($shortcutPath)
 	$shortcut.targetPath = $shortcutTarget
