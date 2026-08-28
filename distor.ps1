@@ -67,6 +67,10 @@ if ($serviceInfo)
 		Start-Process -Verb runAs -FilePath $tor -ArgumentList "-service", "install"
 		Write-Host "$prefix tor installed"
 
+		# Start top
+		Start-Process -Verb runAs -FilePath "powershell" -ArgumentList "Start-Service -Name $serviceName -verbose"
+		Start-Service -Name $serviceName -verbose
+
 	} else
 	{
 		Write-Host "$prefix didnt find useful tor"
