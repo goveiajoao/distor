@@ -10,6 +10,7 @@ param (
 )
 
 $prefix = ">>>"
+$desktop = [Environment]::GetFolderPath("Desktop")
 $serviceInfo = Get-Service -Name $serviceName -ErrorAction SilentlyContinue
 $downloadHub = Invoke-WebRequest -Uri https://www.torproject.org/download/tor/
 $arch = (&{if($i32)
@@ -97,15 +98,23 @@ if ($serviceInfo)
 # Take file
 Add-Type -AssemblyName System.Windows.Forms
 $shortcutDialog = New-Object System.Windows.Forms.OpenFileDialog
-$shortcutDialog.initialDirectory = [Environment]::GetFolderPath("Desktop")
-$shortcutDialog.filter = "Client Shortcut (*.lnk)| *.lnk"
+$shortcutDialog.initialDirectory = "C:\"
+$shortcutDialog.filter = "Client Executable (*.exe)| *.exe"
 if ($shortcutDialog.ShowDialog() -eq "OK")
 {
 	# Take and change shortcut
-	$shortcutPath = $shortcutDialog.filename
+	#
+	$shortcutFile = "$((Get-Culture).TextInfo.ToTitleCase([System.IO.Path]::GetFileNameWithoutExtension($shortcutDialog.filename))).lnk"
+	$shortcutPath = Join-Path $desktop $shortcutFile
+	$shortcutTarget = $shortcutDialog.filename
+	$shortcutArgs = "--proxy-server=`"socks5://$addr`:$port`""
+
 	$wsh = New-Object -ComObject WScript.Shell
 	$shortcut = $wsh.CreateShortcut($shortcutPath)
-	$shortcut.arguments = "--proxy-server=`"socks5://$addr`:$port`""
+	$shortcut.targetPath = $shortcutTarget
+	$shortcut.workingDirectory = $desktop
+	$shortcut.arguments = $shortcutArgs
+
 	Write-Host "$prefix applying proxy on shortcut '$shortcutPath'"
 	$shortcut.Save()
 }
