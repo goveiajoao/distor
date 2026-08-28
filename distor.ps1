@@ -1,11 +1,12 @@
 #Requires -RunAsAdministrator
 
 param (
+	[switch]$help = $false,
 	[switch]$i32 = $false,
 	[string]$addr = "127.0.0.1",
 	[string]$port = "9050",
-	[string]$serviceName = "tor",
-	[switch]$serviceInstall = $true
+	[switch]$serviceInstall = $true,
+	[string]$serviceName = "tor"
 )
 
 $prefix = ">>>"
