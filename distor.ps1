@@ -78,11 +78,6 @@ if ($serviceInfo)
 	Write-Host "$prefix tor installed"
 
 
-	# Delete tempFolder
-	Get-ChildItem -Path -Path $dataFolder -Recurse | Remove-Item
-	Write-Host "$prefix deleted data content '$dataFolder'"
-
-
 }
 
 
