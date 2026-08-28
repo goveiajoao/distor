@@ -46,33 +46,41 @@ if ($serviceInfo)
 	}
 
 	
-	# Create tempFolder
-	$tempFolder = "$([System.IO.Path]::GetTempPath())$(New-Guid)"
-	New-Item -Type Directory -Path $tempFolder | Out-Null
-	Write-Host "$prefix created temp '$tempFolder'"
+	# Create dataFolder
+	$dataFolder = $env:APPDATA
+	New-Item -Type Directory -Path $dataFolder | Out-Null
+	Write-Host "$prefix data folder '$dataFolder'"
+
+	# Delete dataFolder content
+	Get-ChildItem -Path -Path $dataFolder -Recurse | Remove-Item
+	Write-Host "$prefix deleted all data content '$dataFolder'"
 
 
 	# Set and Download torTar
-	Write-Host "$prefix downloading tor..."
-	$torTar = Join-Path $tempFolder "tor.tar.gz"
+	Write-Host "$prefix downloading tor.tar.gz..."
+	$torTar = Join-Path $dataFolder "tor.tar.gz"
 	Invoke-WebRequest -Uri $downloadLink -OutFile $torTar
-	Write-Host "$prefix tor downloaded '$torTar'"
+	Write-Host "$prefix tor.tar.gz downloaded '$torTar'"
 
 	# Unzip torTar
 	Write-Host "$prefix unzipping tor..."
-	tar -xf $torTar -C $tempFolder
-	$tor = Join-Path $tempFolder "tor"; $tor = Join-Path $tor "tor.exe"
+	tar -xf $torTar -C $dataFolder
+	$tor = Join-Path $dataFolder "tor"; $tor = Join-Path $tor "tor.exe"
 	Write-Host "$prefix tor unzipped '$tor'"
+
+	# Delete torTar
+	Remove-Item -Path $torTar
+	Write-Host "$prefix deleted tor.tar.gz"
 	
 	# Install tor
 	# iex "$tor -service install"
-	Start-Process -FilePath $tor -ArgumentList "-service", "install"
+	Start-Process -Verb runAs -FilePath $tor -ArgumentList "-service", "install"
 	Write-Host "$prefix tor installed"
 
 
 	# Delete tempFolder
-	Remove-Item -Path $tempFolder -Recurse -Force | Out-Null
-	Write-Host "$prefix deleted temp '$tempFolder'"
+	Get-ChildItem -Path -Path $dataFolder -Recurse | Remove-Item
+	Write-Host "$prefix deleted data content '$dataFolder'"
 
 
 }
