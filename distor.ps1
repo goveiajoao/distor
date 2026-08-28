@@ -91,5 +91,5 @@ $shortcutPath = $shortcutDialog.filename
 $wsh = New-Object -ComObject WScript.Shell
 $shortcut = $wsh.CreateShortcut($shortcutPath)
 $shortcut.arguments = "--proxy-server=`"socks5://$addr`:$port`""
-Write-Host "$prefix arguments: $shortcut.arguments"
+Write-Host "$prefix arguments: ${shortcut.arguments}"
 $shortcut.Save()
