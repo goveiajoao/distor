@@ -65,10 +65,8 @@ if ($serviceInfo)
 	Write-Host "$prefix tor unzipped '$tor'"
 	
 	# Install tor
-	if (& $tor -service install)
-	{
-		Write-Host "$prefix tor installed"
-	}
+	iex "$tor -service install"
+	Write-Host "$prefix tor installed"
 
 
 	# Delete tempFolder
