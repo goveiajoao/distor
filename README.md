@@ -8,7 +8,7 @@
 Simple powershell windows script for setting any electron based discord client shortcut to use [tor](https://www.torproject.org/) proxy.
 
 # Install
-Open your powershell and run this script
+Open your powershell and run this script:
 ```
-irm https://github.com/goveiajoao/distor/blob/main/distor.ps1 | iex
+irm https://raw.githubusercontent.com/goveiajoao/distor/refs/heads/main/distor.ps1 | iex
 ```
