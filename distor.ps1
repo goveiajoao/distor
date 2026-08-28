@@ -1,5 +1,3 @@
-#Requires -RunAsAdministrator
-
 param (
 	[switch]$i32 = $false,
 	[string]$addr = "127.0.0.1",
