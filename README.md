@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="assets/distor.png">
+    <img src="assets/banner.png">
 </p>
 
 ---
