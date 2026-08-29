@@ -100,7 +100,7 @@ Write-Host "$prefix data folder '$dataFolder'"
 # Install icon.ico
 Write-Host "$prefix downloading icon..."
 $dataIcon = Join-Path $dataFolder "icon.ico"
-Invoke-WebRequest -Uri "" -OutFile $dataIcon | Out-Null
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/goveiajoao/distor/refs/heads/main/assets/icon.ico" -OutFile $dataIcon | Out-Null
 Write-Host "$prefix icon downloaded"
 
 
