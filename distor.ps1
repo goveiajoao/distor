@@ -122,14 +122,12 @@ Write-Host "$prefix icon downloaded"
 # Take *.exe file
 Add-Type -AssemblyName System.Windows.Forms
 $shortcutDialog = New-Object System.Windows.Forms.OpenFileDialog
-$shortcutInit = Join-Path $env:LOCALAPPDATA "Discord"
-
 
 $shortcutDialog.filter = "Client Executable (*.exe)| *.exe"
 $shortcutArgs = "--proxy-server=`"socks5://$addr`:$port`" --disable-quic"
 
-
 $shortcutDialog.initialDirectory = "C:\"
+$shortcutInit = Join-Path $env:LOCALAPPDATA "Discord"
 if (Test-Path -Path $shortcutInit)
 {
 	$shortcutDialog.initialDirectory = $shortcutInit
