@@ -107,7 +107,7 @@ Write-Host "$prefix icon downloaded"
 # Take *.exe file
 Add-Type -AssemblyName System.Windows.Forms
 $shortcutDialog = New-Object System.Windows.Forms.OpenFileDialog
-$shortcutInit = Join-Path $env:LOCALAPPDATA "Discord\Update.exe"
+$shortcutInit = Join-Path $env:LOCALAPPDATA "Discord"
 
 if ($updateTarget)
 {
