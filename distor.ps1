@@ -122,10 +122,10 @@ Invoke-WebRequest -Uri "https://raw.githubusercontent.com/goveiajoao/distor/refs
 Write-Host "$prefix icon downloaded"
 
 # wrapper.bat
-Write-Host "$prefix setting wrapper.bat..."
-$updateWrapperPath = Join-Path $dataFolder "updateWrapper.bat"
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/goveiajoao/distor/refs/heads/main/updateWrapper.bat" -OutFile $updateWrapperPath | Out-Null
-Write-Host "$prefix wrapper.bat set"
+# Write-Host "$prefix setting wrapper.bat..."
+# $updateWrapperPath = Join-Path $dataFolder "updateWrapper.bat"
+# Invoke-WebRequest -Uri "https://raw.githubusercontent.com/goveiajoao/distor/refs/heads/main/updateWrapper.bat" -OutFile $updateWrapperPath | Out-Null
+# Write-Host "$prefix wrapper.bat set"
 
 # Take *.exe file
 Add-Type -AssemblyName System.Windows.Forms
