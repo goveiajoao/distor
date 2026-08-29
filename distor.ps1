@@ -4,6 +4,7 @@ param (
 	[switch]$help = $false,
 	[string]$addr = "127.0.0.1",
 	[string]$port = "9050",
+	[switch]$updateTarget = $false,
 	[switch]$serviceInstall = $true,
 	[switch]$service32 = $false,
 	[string]$serviceName = "tor"
@@ -92,28 +93,48 @@ if ($serviceInfo)
 	
 }
 
-
-
 # Take *.exe file
 Add-Type -AssemblyName System.Windows.Forms
 $shortcutDialog = New-Object System.Windows.Forms.OpenFileDialog
-$shortcutDialog.initialDirectory = "C:\"
-$shortcutDialog.filter = "Client Executable (*.exe)| *.exe"
+$shortcutInit = Join-Path $env:LOCALAPPDATA "Discord\Update.exe"
+
+if ($updateTarget)
+{
+	if (Test-Path -Path $shortcutInit -PathType Leaf)
+	{
+		$shortcutDialog.initialDirectory = $shortcutInit
+	}
+	$shortcutDialog.filter = "Client Update Executable (Update.exe)| Update.exe"
+	$shortcutArgs = "--processStart Discord.exe --proxy-server=`"socks5://$addr`:$port`""
+} else
+{
+	$shortcutDialog.initialDirectory = "C:\"
+	$shortcutDialog.filter = "Client Executable (*.exe)| *.exe"
+	$shortcutArgs = "--proxy-server=`"socks5://$addr`:$port`""
+}
+
 if ($shortcutDialog.ShowDialog() -eq "OK")
 {
 	# Pre-Create
 	$shortcutFile = "$((Get-Culture).TextInfo.ToTitleCase([System.IO.Path]::GetFileNameWithoutExtension($shortcutDialog.filename))).lnk"
 	$shortcutPath = Join-Path $desktop $shortcutFile
 	$shortcutTarget = $shortcutDialog.filename
-	$shortcutArgs = "--proxy-server=`"socks5://$addr`:$port`""
 
-	# Create shortcut
+	# Create shortcut on desktop
 	$wsh = New-Object -ComObject WScript.Shell
 	$shortcut = $wsh.CreateShortcut($shortcutPath)
 	$shortcut.targetPath = $shortcutTarget
 	$shortcut.workingDirectory = $desktop
 	$shortcut.arguments = $shortcutArgs
-
-	Write-Host "$prefix applying proxy on shortcut '$shortcutPath'"
 	$shortcut.Save()
+
+	# Copy new shortcut on the start
+	$discordStart = Path-Join $env:APPDATA "Microsoft\Windows\Start Menu\Programs\Discord Inc\Discord.lnk"
+	if (Test-Path -Path $discordStart -PathType Leaf)
+	{
+		Copy-Item $shortcutPath -Destination $discordStart
+	}
+
+	Write-Host "$prefix proxy applied on shortcuts"
+
 }
