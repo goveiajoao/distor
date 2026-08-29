@@ -4,7 +4,6 @@ param (
 	[switch]$help = $false,
 	[string]$addr = "127.0.0.1",
 	[string]$port = "9050",
-	[switch]$disableUpdateTarget = $false,
 	[switch]$disableServiceInstall = $false,
 	[switch]$service32 = $false,
 	[string]$serviceName = "tor"
@@ -20,7 +19,6 @@ OPTIONS`
 	[switch] -help				show this help text`
 	[string] -addr				changes the addr to use in the proxy`
 	[string] -port				changes the port to use in the proxy`
-	[switch] -disableUpdateTarget		disable the target from Update.exe to *.exe`
 	[switch] -disableServiceInstall		disable the install and check for the service`
 	[switch] -service32			32bit tor version`
 	[string] -serviceName			change the service name"
@@ -121,31 +119,22 @@ $iconPath = Join-Path $dataFolder "icon.ico"
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/goveiajoao/distor/refs/heads/main/assets/icon.ico" -OutFile $iconPath | Out-Null
 Write-Host "$prefix icon downloaded"
 
-# wrapper.bat
-# Write-Host "$prefix setting wrapper.bat..."
-# $updateWrapperPath = Join-Path $dataFolder "updateWrapper.bat"
-# Invoke-WebRequest -Uri "https://raw.githubusercontent.com/goveiajoao/distor/refs/heads/main/updateWrapper.bat" -OutFile $updateWrapperPath | Out-Null
-# Write-Host "$prefix wrapper.bat set"
-
 # Take *.exe file
 Add-Type -AssemblyName System.Windows.Forms
 $shortcutDialog = New-Object System.Windows.Forms.OpenFileDialog
 $shortcutInit = Join-Path $env:LOCALAPPDATA "Discord"
 
-if (-not $disableUpdateTarget)
+
+$shortcutDialog.filter = "Client Executable (*.exe)| *.exe"
+$shortcutArgs = "--proxy-server=`"socks5://$addr`:$port`" --disable-quic"
+
+
+$shortcutDialog.initialDirectory = "C:\"
+if (Test-Path -Path $shortcutInit)
 {
-	if (Test-Path -Path $shortcutInit)
-	{
-		$shortcutDialog.initialDirectory = $shortcutInit
-	}
-	$shortcutDialog.filter = "Client Update Executable (Update.exe)| Update.exe"
-	$shortcutArgs = "--processStart $updateWrapperPath"
-} else
-{
-	$shortcutDialog.initialDirectory = "C:\"
-	$shortcutDialog.filter = "Client Executable (*.exe)| *.exe"
-	$shortcutArgs = "--proxy-server=`"socks5://$addr`:$port`" --disable-quic"
+	$shortcutDialog.initialDirectory = $shortcutInit
 }
+
 
 if ($shortcutDialog.ShowDialog() -eq "OK")
 {
@@ -162,12 +151,12 @@ if ($shortcutDialog.ShowDialog() -eq "OK")
 	$shortcut.arguments = $shortcutArgs
 	$shortcut.iconLocation = $iconPath
 	$shortcut.Save()
-	Write-Host "$prefix proxy applied on desktop shortcut"
+	Write-Host "$prefix desktop shortcut applied"
 
 	# Copy new shortcut on the start
 	$startPath = Join-Path $env:APPDATA "Microsoft\Windows\Start Menu\Programs\"
 	Copy-Item $shortcutPath -Destination $startPath
-	Write-Host "$prefix proxy applied on start shortcut"
+	Write-Host "$prefix start shortcut applied"
 
 
 }

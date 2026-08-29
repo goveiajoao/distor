@@ -19,7 +19,6 @@ OPTIONS
         [switch] -help                          show this help text
         [string] -addr                          changes the addr to use in the proxy
         [string] -port                          changes the port to use in the proxy
-        [switch] -disableUpdateTarget           disable the target from Update.exe to *.exe
         [switch] -disableServiceInstall         disable the install and check for the service
         [switch] -service32                     32bit tor version
         [string] -serviceName                   change the service name
