@@ -44,7 +44,6 @@ if ($serviceInfo)
 
 		Write-Host "$prefix installing service..."
 
-
 		# Take downloadLink
 		$downloadLink = $downloadHub.Links | where {$_ -like "*tor-expert-bundle-windows-$arch*"} | select -first 1
 
@@ -54,20 +53,20 @@ if ($serviceInfo)
 			Write-Host "$prefix found tor link '$downloadLink'" 
 
 			# Create dataFolder
-			$dataFolder = Join-Path $env:ProgramFiles "Tor"
-			New-Item -Type Directory -Path $dataFolder -Force | Out-Null
-			Write-Host "$prefix data folder '$dataFolder'"
+			$torProgramFolder = Join-Path $env:ProgramFiles "Tor"
+			New-Item -Type Directory -Path $torProgramFolder -Force | Out-Null
+			Write-Host "$prefix data folder '$torProgramFolder'"
 
 			# Set and download torTar
 			Write-Host "$prefix downloading tor.tar.gz..."
-			$torTar = Join-Path $dataFolder "tor.tar.gz"
+			$torTar = Join-Path $torProgramFolder "tor.tar.gz"
 			Invoke-WebRequest -Uri $downloadLink -OutFile $torTar
 			Write-Host "$prefix tor.tar.gz downloaded '$torTar'"
 
 			# Unzip torTar
 			Write-Host "$prefix unzipping tor..."
-			tar -xf $torTar -C $dataFolder
-			$tor = Join-Path $dataFolder "tor"; $tor = Join-Path $tor "tor.exe"
+			tar -xf $torTar -C $torProgramFolder
+			$tor = Join-Path $torProgramFolder "tor"; $tor = Join-Path $tor "tor.exe"
 			Write-Host "$prefix tor unzipped '$tor'"
 
 			# Delete torTar
@@ -116,7 +115,7 @@ if ($updateTarget)
 if ($shortcutDialog.ShowDialog() -eq "OK")
 {
 	# Pre-Create
-	$shortcutFile = "$((Get-Culture).TextInfo.ToTitleCase([System.IO.Path]::GetFileNameWithoutExtension($shortcutDialog.filename))).lnk"
+	$shortcutFile = "DisTor.lnk"
 	$shortcutPath = Join-Path $desktop $shortcutFile
 	$shortcutTarget = $shortcutDialog.filename
 
@@ -130,10 +129,10 @@ if ($shortcutDialog.ShowDialog() -eq "OK")
 	Write-Host "$prefix proxy applied on desktop shortcut"
 
 	# Copy new shortcut on the start
-	$discordStart = Join-Path $env:APPDATA "Microsoft\Windows\Start Menu\Programs\Discord Inc\Discord.lnk"
-	if (Test-Path -Path $discordStart -PathType Leaf)
+	$startPath = Join-Path $env:APPDATA "Microsoft\Windows\Start Menu\Programs\"
+	if (Test-Path -Path $startPath -PathType Leaf)
 	{
-		Copy-Item $shortcutPath -Destination $discordStart
+		Copy-Item $shortcutPath -Destination $startPath
 		Write-Host "$prefix proxy applied on start shortcut"
 	}
 
