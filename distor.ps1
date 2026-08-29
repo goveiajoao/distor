@@ -121,11 +121,11 @@ $iconPath = Join-Path $dataFolder "icon.ico"
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/goveiajoao/distor/refs/heads/main/assets/icon.ico" -OutFile $iconPath | Out-Null
 Write-Host "$prefix icon downloaded"
 
-# Install .bat
-Write-Host "$prefix downloading updateWrapper..."
+# wrapper.bat
+Write-Host "$prefix setting wrapper.bat..."
 $updateWrapperPath = Join-Path $dataFolder "updateWrapper.bat"
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/goveiajoao/distor/refs/heads/main/updateWrapper.bat" -OutFile $updateWrapperPath | Out-Null
-Write-Host "$prefix updateWrapper downloaded"
+Write-Host "$prefix wrapper.bat set"
 
 # Take *.exe file
 Add-Type -AssemblyName System.Windows.Forms
