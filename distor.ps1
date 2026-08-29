@@ -116,12 +116,12 @@ if ($updateTarget)
 		$shortcutDialog.initialDirectory = $shortcutInit
 	}
 	$shortcutDialog.filter = "Client Update Executable (Update.exe)| Update.exe"
-	$shortcutArgs = "--processStart Discord.exe --proxy-server=`"socks5://$addr`:$port`""
+	$shortcutArgs = "--processStart Discord.exe --proxy-server=`"socks5://$addr`:$port`" --disable-quic"
 } else
 {
 	$shortcutDialog.initialDirectory = "C:\"
 	$shortcutDialog.filter = "Client Executable (*.exe)| *.exe"
-	$shortcutArgs = "--proxy-server=`"socks5://$addr`:$port`""
+	$shortcutArgs = "--proxy-server=`"socks5://$addr`:$port`" --disable-quic"
 }
 
 if ($shortcutDialog.ShowDialog() -eq "OK")
