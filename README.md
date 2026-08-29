@@ -2,8 +2,6 @@
     <img src="assets/banner.png">
 </p>
 
----
-
 # About
 Simple powershell windows script for creating a shortcut to any electron based discord client and set it to use a [tor](https://www.torproject.org/) proxy.
 
