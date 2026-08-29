@@ -55,12 +55,12 @@ if ($serviceInfo)
 			# Create dataFolder
 			$torProgramFolder = Join-Path $env:ProgramFiles "Tor"
 			New-Item -Type Directory -Path $torProgramFolder -Force | Out-Null
-			Write-Host "$prefix data folder '$torProgramFolder'"
+			Write-Host "$prefix tor program folder '$torProgramFolder'"
 
 			# Set and download torTar
 			Write-Host "$prefix downloading tor.tar.gz..."
 			$torTar = Join-Path $torProgramFolder "tor.tar.gz"
-			Invoke-WebRequest -Uri $downloadLink -OutFile $torTar
+			Invoke-WebRequest -Uri $downloadLink -OutFile $torTar | Out-Null
 			Write-Host "$prefix tor.tar.gz downloaded '$torTar'"
 
 			# Unzip torTar
@@ -92,6 +92,18 @@ if ($serviceInfo)
 	
 }
 
+# Setup dataFolder
+$dataFolder = Join-Path $env:LOCALAPPDATA "Distor"
+New-Item -Type Directory -Path $dataFolder -Force | Out-Null
+Write-Host "$prefix data folder '$dataFolder'"
+
+# Install icon.ico
+Write-Host "$prefix downloading icon..."
+$dataIcon = Join-Path $dataFolder "icon.ico"
+Invoke-WebRequest -Uri "" -OutFile $dataIcon | Out-Null
+Write-Host "$prefix icon downloaded"
+
+
 # Take *.exe file
 Add-Type -AssemblyName System.Windows.Forms
 $shortcutDialog = New-Object System.Windows.Forms.OpenFileDialog
@@ -115,7 +127,7 @@ if ($updateTarget)
 if ($shortcutDialog.ShowDialog() -eq "OK")
 {
 	# Pre-Create
-	$shortcutFile = "DisTor.lnk"
+	$shortcutFile = "Distor.lnk"
 	$shortcutPath = Join-Path $desktop $shortcutFile
 	$shortcutTarget = $shortcutDialog.filename
 
@@ -125,6 +137,7 @@ if ($shortcutDialog.ShowDialog() -eq "OK")
 	$shortcut.targetPath = $shortcutTarget
 	$shortcut.workingDirectory = $desktop
 	$shortcut.arguments = $shortcutArgs
+	$shortcut.iconLocation = $dataIcon
 	$shortcut.Save()
 	Write-Host "$prefix proxy applied on desktop shortcut"
 
