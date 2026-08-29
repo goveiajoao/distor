@@ -117,10 +117,15 @@ Write-Host "$prefix data folder '$dataFolder'"
 
 # Install icon.ico
 Write-Host "$prefix downloading icon..."
-$dataIcon = Join-Path $dataFolder "icon.ico"
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/goveiajoao/distor/refs/heads/main/assets/icon.ico" -OutFile $dataIcon | Out-Null
+$iconPath = Join-Path $dataFolder "icon.ico"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/goveiajoao/distor/refs/heads/main/assets/icon.ico" -OutFile $iconPath | Out-Null
 Write-Host "$prefix icon downloaded"
 
+# Install .bat
+Write-Host "$prefix downloading updateWrapper..."
+$updateWrapperPath = Join-Path $dataFolder "updateWrapper.bat"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/goveiajoao/distor/refs/heads/main/updateWrapper.bat" -OutFile $updateWrapperPath | Out-Null
+Write-Host "$prefix updateWrapper downloaded"
 
 # Take *.exe file
 Add-Type -AssemblyName System.Windows.Forms
@@ -134,7 +139,7 @@ if (-not $disableUpdateTarget)
 		$shortcutDialog.initialDirectory = $shortcutInit
 	}
 	$shortcutDialog.filter = "Client Update Executable (Update.exe)| Update.exe"
-	$shortcutArgs = "--processStart Discord.exe --proxy-server=`"socks5://$addr`:$port`" --disable-quic"
+	$shortcutArgs = "--processStart $updateWrapperPath"
 } else
 {
 	$shortcutDialog.initialDirectory = "C:\"
@@ -155,7 +160,7 @@ if ($shortcutDialog.ShowDialog() -eq "OK")
 	$shortcut.targetPath = $shortcutTarget
 	$shortcut.workingDirectory = $desktop
 	$shortcut.arguments = $shortcutArgs
-	$shortcut.iconLocation = $dataIcon
+	$shortcut.iconLocation = $iconPath
 	$shortcut.Save()
 	Write-Host "$prefix proxy applied on desktop shortcut"
 
