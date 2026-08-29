@@ -4,7 +4,7 @@ param (
 	[switch]$help = $false,
 	[string]$addr = "127.0.0.1",
 	[string]$port = "9050",
-	[switch]$updateTarget = $false,
+	[switch]$updateTarget = $true,
 	[switch]$serviceInstall = $true,
 	[switch]$service32 = $false,
 	[string]$serviceName = "tor"
