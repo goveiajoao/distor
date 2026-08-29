@@ -4,11 +4,28 @@ param (
 	[switch]$help = $false,
 	[string]$addr = "127.0.0.1",
 	[string]$port = "9050",
-	[switch]$updateTarget = $true,
-	[switch]$serviceInstall = $true,
+	[switch]$disableUpdateTarget = $false,
+	[switch]$disableServiceInstall = $false,
 	[switch]$service32 = $false,
 	[string]$serviceName = "tor"
 )
+
+if ($help)
+{
+	Write-Host "`
+USAGE`
+	distor.ps1 [OPTIONS]`
+`
+OPTIONS`
+	[switch] -help				show this help text`
+	[string] -addr				changes the addr to use in the proxy`
+	[string] -port				changes the port to use in the proxy`
+	[switch] -disableUpdateTarget		disable the target from Update.exe to *.exe`
+	[switch] -disableServiceInstall		disable the install and check for the service`
+	[switch] -service32			32bit tor version`
+	[string] -serviceName			change the service name"
+	Exit
+}
 
 $prefix = ">>>"
 $desktop = [Environment]::GetFolderPath("Desktop")
@@ -39,7 +56,7 @@ if ($serviceInfo)
 { 
 	Write-Host "$prefix '$serviceName' service not found"
 
-	if ($serviceInstall)
+	if (-not $disableServiceInstall)
 	{
 
 		Write-Host "$prefix installing service..."
@@ -110,7 +127,7 @@ Add-Type -AssemblyName System.Windows.Forms
 $shortcutDialog = New-Object System.Windows.Forms.OpenFileDialog
 $shortcutInit = Join-Path $env:LOCALAPPDATA "Discord"
 
-if ($updateTarget)
+if (-not $disableUpdateTarget)
 {
 	if (Test-Path -Path $shortcutInit)
 	{
