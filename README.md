@@ -10,7 +10,7 @@ Open your powershell as administrator and run this:
 ```
 irm https://raw.githubusercontent.com/goveiajoao/distor/refs/heads/main/distor.ps1 | iex
 ```
-Script settings can be changed with flags, see them with -help flag:
+Script settings can be changed with flags, see them with the -help flag:
 ```
 USAGE
         distor.ps1 [OPTIONS]
