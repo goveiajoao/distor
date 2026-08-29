@@ -130,7 +130,7 @@ if ($shortcutDialog.ShowDialog() -eq "OK")
 	Write-Host "$prefix proxy applied on desktop shortcut"
 
 	# Copy new shortcut on the start
-	$discordStart = Path-Join $env:APPDATA "Microsoft\Windows\Start Menu\Programs\Discord Inc\Discord.lnk"
+	$discordStart = Join-Path $env:APPDATA "Microsoft\Windows\Start Menu\Programs\Discord Inc\Discord.lnk"
 	if (Test-Path -Path $discordStart -PathType Leaf)
 	{
 		Copy-Item $shortcutPath -Destination $discordStart
