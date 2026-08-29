@@ -76,6 +76,7 @@ if ($serviceInfo)
 			# Install tor
 			iex "& `"$tor`" -service install"
 			Write-Host "$prefix tor installed"
+			Start-Service -Name $serviceName -verbose
 
 		} else
 		{
@@ -111,10 +112,11 @@ $shortcutInit = Join-Path $env:LOCALAPPDATA "Discord"
 
 if ($updateTarget)
 {
-	if (Test-Path -Path $shortcutInit -PathType Leaf)
+	if (Test-Path -Path $shortcutInit)
 	{
 		$shortcutDialog.initialDirectory = $shortcutInit
 	}
+	$shortcutDialog.initialDirectory = $shortcutInit
 	$shortcutDialog.filter = "Client Update Executable (Update.exe)| Update.exe"
 	$shortcutArgs = "--processStart Discord.exe --proxy-server=`"socks5://$addr`:$port`" --disable-quic"
 } else
@@ -143,11 +145,8 @@ if ($shortcutDialog.ShowDialog() -eq "OK")
 
 	# Copy new shortcut on the start
 	$startPath = Join-Path $env:APPDATA "Microsoft\Windows\Start Menu\Programs\"
-	if (Test-Path -Path $startPath -PathType Leaf)
-	{
-		Copy-Item $shortcutPath -Destination $startPath
-		Write-Host "$prefix proxy applied on start shortcut"
-	}
+	Copy-Item $shortcutPath -Destination $startPath
+	Write-Host "$prefix proxy applied on start shortcut"
 
 
 }
