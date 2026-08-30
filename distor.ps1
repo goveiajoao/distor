@@ -130,9 +130,7 @@ $shortcutDialog.initialDirectory = "C:\"
 $shortcutInit = Join-Path $env:LOCALAPPDATA "Discord"
 if (Test-Path -Path $shortcutInit)
 {
-	$shortcutDialog.initialDirectory = $shortcutInit
-	$test = Get-ChildItem -Path $shortcutInit -Recurse | where {$_ -like "*.Discord.exe"} | sort
-	Write-Host $test
+	$shortcutDialog.initialDirectory = Join-Path $shortcutInit "$(Get-ChildItem -Path $shortcutInit -Directory | where {$_ -like "app*"} | select -last 1)"
 }
 
 
