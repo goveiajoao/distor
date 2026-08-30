@@ -38,4 +38,4 @@ then you can just launch discord with the flags that make the magic happens, her
 ```
 --proxy-server="socks5://127.0.0.1:port" --disable-quic"
 ```
-The default port is `9050`, you can place this flags on the Exec of your discord client .desktop in `/usr/share/applications`.
+The default port is `9050`, you can place these flags on the Exec of your discord client .desktop in `/usr/share/applications`.
