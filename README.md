@@ -25,7 +25,7 @@ OPTIONS
 ``` 
 
 # How it Works
-This script will download the tor service in your machine and set a shortcut what uses a [electron flag](https://www.electronjs.org/docs/latest/api/command-line-switches#electron-cli-flags)
+This script will download the tor service in your machine and set a shortcut that uses a [electron flag](https://www.electronjs.org/docs/latest/api/command-line-switches#electron-cli-flags)
 for the app to use the tor proxy.
 
 # Alternatives to Other OSes
