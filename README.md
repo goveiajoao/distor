@@ -28,7 +28,7 @@ OPTIONS
 This script will download the tor service in your machine and set a shortcut that uses a [electron flag](https://www.electronjs.org/docs/latest/api/command-line-switches#electron-cli-flags)
 for the app to use the tor proxy.
 
-# Alternatives to Other OSes
+# Alternatives for Other OSes
 ## Android
 There is the [Orbot](https://play.google.com/store/apps/details?id=org.torproject.android&hl=en-US) PlayStore app that can be used to have a tor service in your phone,
 it has an "Select App" option that lets you apply the proxy effects to just Discord.
